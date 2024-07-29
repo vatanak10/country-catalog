@@ -1,5 +1,5 @@
 <template>
-  <HelloWorld />
+  <CountryList />
 </template>
 
 <script lang="ts" setup>
