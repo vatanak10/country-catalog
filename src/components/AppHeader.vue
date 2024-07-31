@@ -1,6 +1,6 @@
 <template>
   <v-app-bar class="px-4" rounded>
-    Vuetify Application
+    <span class="font-weight-bold">Country Catalog</span>
     <v-spacer />
     <v-btn icon @click="toggleTheme">
       <v-icon>{{

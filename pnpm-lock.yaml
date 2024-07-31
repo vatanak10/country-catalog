@@ -11,6 +11,9 @@ dependencies:
   core-js:
     specifier: ^3.37.1
     version: 3.37.1
+  lodash:
+    specifier: ^4.17.21
+    version: 4.17.21
   roboto-fontface:
     specifier: '*'
     version: 0.10.0
@@ -2330,7 +2333,6 @@ packages:
 
   /lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
-    dev: true
 
   /magic-string-ast@0.6.2:
     resolution: {integrity: sha512-oN3Bcd7ZVt+0VGEs7402qR/tjgjbM7kPlH/z7ufJnzTLVBzXJITRHOJiwMmmYMgZfdoWQsfQcY+iKlxiBppnMA==}

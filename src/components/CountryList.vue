@@ -20,35 +20,36 @@
       </v-btn>
     </div>
 
-    <v-row style="width: 100%">
-      <v-col
-        v-for="country in paginatedCountries"
-        :key="country.ccn3"
-        cols="12"
-        lg="3"
-        sm="4"
-      >
-        <CountryCard :value="country" />
-      </v-col>
-    </v-row>
-
-    <v-spacer />
-    <v-pagination
-      :key="pageCount"
-      v-model="currentPage"
-      :length="pageCount"
-      @input="onPageChange"
+    <CountryDataTable
+      :headers="headers"
+      :items="filteredCountries"
+      @click:row="showCountry"
     />
+
+    <CountryDetailDialog v-model="showDialog" :country="activeCountry" />
   </v-container>
 </template>
 
 <script lang="ts" setup>
+  import { debounce } from 'lodash'
   import { Country } from '@/types/Country'
+
+  const showDialog = ref(false)
+
+  const headers = [
+    { title: 'Flag', value: 'flags', align: 'center' },
+    { title: 'Name', value: 'name.common' },
+    { title: 'CCA2', value: 'cca2' },
+    { title: 'CCA3', value: 'cca3' },
+    { title: 'Native Name', value: 'name.nativeName.eng.common' },
+    { title: 'Alt Name', value: 'altSpellings' },
+    { title: 'IDD', value: 'idd.root' },
+  ]
 
   const countries = await fetchCountries()
 
-  const itemsPerPage = 25
-  const currentPage = ref(1)
+  const activeCountry = ref<Country | null>(null)
+
   const search = ref('')
   const sort = ref('asc')
 
@@ -65,37 +66,44 @@
     return sorted
   })
 
-  const filteredCountries = computed(() => {
-    return sortedCountries.value.filter((country: Country) =>
+  const filteredCountries = ref<Country[]>([])
+
+  const updateFilteredCountries = () => {
+    filteredCountries.value = sortedCountries.value.filter((country: Country) =>
       JSON.stringify(country.name)
         .toLowerCase()
         .includes(search.value.toLowerCase().trim())
     )
-  })
-
-  const pageCount = computed(() => {
-    return Math.ceil(filteredCountries.value.length / itemsPerPage)
-  })
-
-  const paginatedCountries = computed(() => {
-    const start = (currentPage.value - 1) * itemsPerPage
-    const end = start + itemsPerPage
-    return filteredCountries.value.slice(start, end)
-  })
-
-  function onPageChange(page: number) {
-    currentPage.value = page
   }
+
+  const debouncedUpdateFilteredCountries = debounce(
+    updateFilteredCountries,
+    300
+  )
+
+  watch(search, () => {
+    debouncedUpdateFilteredCountries()
+  })
 
   function toggleSort() {
     sort.value = sort.value === 'asc' ? 'desc' : 'asc'
-    currentPage.value = 1
+  }
+
+  function showCountry(country: Country) {
+    console.log(country)
+    activeCountry.value = country
+    showDialog.value = true
   }
 
   async function fetchCountries() {
-    const response = await fetch('https://restcountries.com/v3.1/all')
+    const fields = ['flags', 'name', 'cca2', 'cca3', 'altSpellings', 'idd']
+    const response = await fetch(
+      `https://restcountries.com/v3.1/all?fields=${fields.join(',')}`
+    )
     const data = await response.json()
-    console.log(data)
     return data
   }
+
+  // Initialize the filtered countries
+  updateFilteredCountries()
 </script>
