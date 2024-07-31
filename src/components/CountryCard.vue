@@ -10,7 +10,7 @@
       </v-card>
     </template>
 
-    <template #default="{ isActive }">
+    <template #default>
       <v-card
         prepend-icon="mdi-package"
         text="When using the activator slot, you must bind the slot props to the activator element."
