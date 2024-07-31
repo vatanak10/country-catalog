@@ -3,8 +3,8 @@
     :header-props="{
       'sort-icon': 'mdi-swap-vertical',
     }"
-    :headers="headers"
-    :items="items"
+    :headers="props.headers"
+    :items="props.items"
     items-per-page="25"
     return-object
     @click:row="handleRowClick"
@@ -29,7 +29,7 @@
 
   const emit = defineEmits(['click:row'])
 
-  function handleRowClick(event) {
+  function handleRowClick(event: PointerEvent) {
     emit('click:row', event)
   }
 </script>

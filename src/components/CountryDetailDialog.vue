@@ -10,13 +10,13 @@
   import { Country } from '@/types/Country'
 
   const props = defineProps<{
-    modelValue: Boolean
-    country: Country
+    modelValue: boolean
+    country: Country | null
   }>()
 
   const emit = defineEmits(['update:modelValue'])
 
-  const showDialog = ref(props.modelValue)
+  const showDialog = ref(props.modelValue as boolean)
 
   watch(showDialog, (newValue) => {
     emit('update:modelValue', newValue)
