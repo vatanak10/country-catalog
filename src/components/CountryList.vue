@@ -36,7 +36,7 @@
 
   // State variables
   const showDialog = ref(false)
-  const activeCountry = ref<Country | null>(null)
+  const activeCountry = ref<Country>({} as Country)
   const search = ref('')
   const sort = ref('asc')
   const filteredCountries = ref<Country[]>([])
