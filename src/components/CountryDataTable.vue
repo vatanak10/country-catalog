@@ -7,14 +7,39 @@
     :items="props.items"
     items-per-page="25"
     return-object
-    @click:row="handleRowClick"
   >
-    <template #item.flags="{ value }">
-      <v-img class="rounded" cover height="40" :src="value.png" width="80" />
-    </template>
-
-    <template #item.altSpellings="{ value }">
-      {{ value.join(', ') }}
+    <template #item="{ item }">
+      <tr @click="handleRowClick(item)">
+        <td v-for="header in props.headers" :key="header.value">
+          <template v-if="header.value === 'flags'">
+            <v-img
+              class="rounded"
+              cover
+              height="40"
+              :src="item.flags.png"
+              width="80"
+            />
+          </template>
+          <template v-else-if="header.value === 'name'">
+            {{ item.name.official }}
+          </template>
+          <template v-else-if="header.value === 'nativeName'">
+            <div v-for="(name, lang) in item.name.nativeName" :key="lang">
+              <span class="font-decoration-italic">{{ lang }} </span>:
+              {{ name.official }}
+            </div>
+          </template>
+          <template v-else-if="header.value === 'altSpellings'">
+            {{ item.altSpellings.join(', ') }}
+          </template>
+          <template v-else-if="header.value === 'idd'">
+            {{ item.idd.root }}
+          </template>
+          <template v-else>
+            {{ item[header.value] }}
+          </template>
+        </td>
+      </tr>
     </template>
   </v-data-table>
 </template>
@@ -29,7 +54,7 @@
 
   const emit = defineEmits(['click:row'])
 
-  function handleRowClick(event: PointerEvent) {
-    emit('click:row', event)
+  function handleRowClick(item: Country) {
+    emit('click:row', item)
   }
 </script>
